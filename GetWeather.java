@@ -7,7 +7,6 @@ public class GetWeather {
 	
 	public GetWeather(String ZIP, String begin, String end, String units) {
 		try {
-			// using sample data
 			buildURL(ZIP, begin, end, units);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -51,7 +50,6 @@ public class GetWeather {
 		base += "&sky=sky"; // cloud cover
 		base += "&wspd=wspd"; // wind speed
 		base += "&wdir=wdir"; // wind direction
-		// add ndfd elements
 		
 		weather = new URL(base);
 	}
