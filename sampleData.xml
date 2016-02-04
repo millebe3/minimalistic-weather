@@ -1,3 +1,6 @@
+<!-- for the URL http://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?zipCodeList=21229&product=time-series&begin=2016-02-03T12:00&end=2016-02-03T13:00&unit=e&maxt=maxt&mint=mint&appt=appt&pop12=pop12&sky=sky&wspd=wspd&wdir=wdir
+As you can see, it gives you seven days of data, even when 1 day is requested -->
+
 <?xml version="1.0"?>
 <dwml version="1.0" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.nws.noaa.gov/forecasts/xml/DWMLgen/schema/DWML.xsd">
   <head>
