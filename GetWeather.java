@@ -39,7 +39,7 @@ public class GetWeather {
 	protected void buildURL(String ZIP, String begin, String end, String unit) throws MalformedURLException {
 		String base = "http://graphical.weather.gov/xml/sample_products/browser_interface/ndfdXMLclient.php?";
 		base += "zipCodeList=" + ZIP;
-		base += "&product=time-series"; // or "glance"
+		base += "&product=time-series";
 		base += "&begin=" + begin;
 		base += "&end=" + end;
 		base += "&unit=" + unit;
