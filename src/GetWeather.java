@@ -26,6 +26,8 @@ public class GetWeather {
 					content += temp + "\n";
 					temp = io.readLine();			
 				}
+				
+				io.close();
 			}
 			
 		} catch (MalformedURLException e) {
