@@ -1,3 +1,6 @@
+// GetWeather.java	Dorothy Carter
+// This class instantiates an
+
 import java.net.*;
 import java.io.*;
 
