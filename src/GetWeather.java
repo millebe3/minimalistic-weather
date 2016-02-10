@@ -1,5 +1,6 @@
 // GetWeather.java	Dorothy Carter
-// This class instantiates an
+// This class instantiates an object that stores an URL and the content located at that URL
+// The URL always points to the REST service of the NDFD
 
 import java.net.*;
 import java.io.*;
@@ -21,6 +22,7 @@ public class GetWeather {
 		try {
 			HttpURLConnection cnx = (HttpURLConnection) weather.openConnection();
 			cnx.connect();
+			// if the connection is ok, read the content from it
 			if (cnx.getResponseCode() == 200) {
 				BufferedReader io = new BufferedReader(new InputStreamReader(cnx.getInputStream()));
 				
@@ -55,7 +57,7 @@ public class GetWeather {
 		base += "&sky=sky"; // cloud cover
 		base += "&wspd=wspd"; // wind speed
 		base += "&wdir=wdir"; // wind direction
-		base += "&rh=rh";
+		base += "&rh=rh"; // relative humidity
 		
 		weather = new URL(base);
 	}
@@ -80,6 +82,8 @@ public class GetWeather {
 		return weather + "\n" + content;
 	}
 	
+	// this is a method to build a timestamp that follows the doc's specifications
+	// it may or may not be useful
 	public static String buildTimestamp(int year, int month, int day, int hour, int minute) {
 		String temp = year + "-";
 		if (month < 10)
