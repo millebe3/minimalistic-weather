@@ -1,22 +1,29 @@
 #XML parsing using SAX
-The objective is for this class to take some XML and return a collection of Weather objects, each of which stand for a day
+The objective is for this class to take some XML and return a linked-list tree.
 
-##Weather objects
-A Weather object will stand for a day
-* String timestamp (in timestamp format YYYY-MM-DDTHH:MM)
-* boolean metric (true if it is metric, false if it's imperial)
-* int hi (in Fahrenheit/Celcius)
-* int lo (in Fahrenheit/Celcius)
-* int current (in Fahrenheit/Celcius)
-* int precip (precipitation; as percent)
-* int wDirection (wind direction; in degrees true)
-* int wSpeed (wind speed; in knots/meters per second)
-* int cloud (as percent)
-* int relHum (relative humidity; as a percent)
-* getters & setters
-* include methods that convert between cloud cover, wind direction to more useful words ("NE", "partly cloudy", etc) ?
+##anatomy of a tree
+thre tree returneds
+           root node
+       /   /    |  \   \
+     day1 day2 day3 ... dayN
+    /   \
+  12h   12h
+ /   \ /   \
+3h  ...... 3h
 
-Now, for elements that are in "k-p12h-n14-3" or "k-p3h-n40-4" time formats, the value stored in the Weather object will be the value closest to the current time. All others will be discarded.
+a 3h period node (Node class):
+* timestamp
+* temperature
+  * high (int; Fahrenheit/Celcius)
+  * low (int; Fahrenheit/Celcius)
+  * apparent (int; Fahrenheit/Celcius)
+* precipitation (int; percent)
+* wind
+  * speed (int; knots/meters per second)
+  * direction (int; degrees true)
+* cloud cover (int; percent)
+* relative humidity (int; percent)
+* any other elements
 
 
 ##Actual parsing
