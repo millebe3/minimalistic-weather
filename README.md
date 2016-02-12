@@ -1,7 +1,7 @@
 # minimalistic-weather
 A minimalistic weather app in Java. Made for a class.
 
-If downloading the file, make sure that the JavaSE in .classpath is the version on your computer (currently, it's 1.7).
+If downloading the file, make sure that the JavaSE in .classpath is the version on your computer (currently, it's 1.8).
 ##Todo:
 + [NDFD REST service](http://graphical.weather.gov/xml/rest.php)
   * ~~Do timestamps (shouldn't be too bad. In the format of YYYY-MM-DDTHH:MM)~~ There's a method in GetWeather that builds them for you.

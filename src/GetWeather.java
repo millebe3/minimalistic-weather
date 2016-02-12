@@ -48,7 +48,7 @@ public class GetWeather {
 		base += "&product=time-series";
 		base += "&begin=" + begin;
 		base += "&end=" + end;
-		base += "&unit=" + unit;
+		base += "&Unit=" + unit;
 		
 		base += "&maxt=maxt"; // max temp
 		base += "&mint=mint"; // minimum temp
@@ -84,7 +84,7 @@ public class GetWeather {
 	
 	// this is a method to build a timestamp that follows the doc's specifications
 	// it may or may not be useful
-	public static String buildTimestamp(int year, int month, int day, int hour, int minute) {
+	public static String buildTimestamp(int year, int month, int day, int hour) {
 		String temp = year + "-";
 		if (month < 10)
 			temp += "0" + month;
