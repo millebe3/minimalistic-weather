@@ -1,24 +1,28 @@
 #XML parsing using SAX
-The objective is for this class to take some XML and return a collection of Weather objects, each of which stand for a day
+The objective is for this class to take some XML and return a tree.
 
-##Weather objects
-A Weather object will stand for a day
-* String timestamp (in timestamp format YYYY-MM-DDTHH:MM)
-* boolean metric (true if it is metric, false if it's imperial)
-* int hi (in Fahrenheit/Celcius)
-* int lo (in Fahrenheit/Celcius)
-* int current (in Fahrenheit/Celcius)
-* int precip (precipitation; as percent)
-* int wDirection (wind direction; in degrees true)
-* int wSpeed (wind speed; in knots/meters per second)
-* int cloud (as percent)
-* int relHum (relative humidity; as a percent)
-* getters & setters
-* include methods that convert between cloud cover, wind direction to more useful words ("NE", "partly cloudy", etc) ?
+##anatomy of a tree
+the tree returned is used for traversing time periods. It's subdivided into 24h periods, then 12h, then 6h, then 3h, making it a binary tree.
 
-Now, for elements that are in "k-p12h-n14-3" or "k-p3h-n40-4" time formats, the value stored in the Weather object will be the value closest to the current time. All others will be discarded.
+a node (Node class):
+* timestamp
+* right child
+* left child
+
+a 3h period leaf (Weather class):
+* timestamp
+* temperature
+  * high (int; Fahrenheit/Celcius)
+  * low (int; Fahrenheit/Celcius)
+  * apparent (int; Fahrenheit/Celcius)
+* precipitation (int; percent)
+* wind
+  * speed (int; knots/meters per second)
+  * direction (int; degrees true)
+* cloud cover (int; percent)
+* relative humidity (int; percent)
+* any other elements
 
 
 ##Actual parsing
 [java SAX docs](https://docs.oracle.com/javase/7/docs/api/org/xml/sax/package-summary.html)
-
