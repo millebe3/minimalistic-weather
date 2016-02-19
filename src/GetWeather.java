@@ -3,43 +3,70 @@
 // The URL always points to the REST service of the NDFD
 
 import java.net.*;
+import javax.xml.parsers.*;
+import org.xml.sax.SAXException;
+import java.util.ArrayList;
 import java.io.*;
 
 public class GetWeather {
-	protected URL weather;
-	protected String content;
+	protected URL here;
+	protected boolean unit;
+	protected InputStream in;
+	protected ArrayList<Weather> parsed;
 	
 	public GetWeather(String ZIP, String begin, String end, String units) {
+		if (units.equals("m"))
+			unit = true;
+		else
+			unit = false;
+		
+		
 		try {
 			buildURL(ZIP, begin, end, units);
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}
 		grabData();
+		try {
+			parseData();
+		} catch (SAXException e) {
+			e.printStackTrace();
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	protected void grabData() {
 		try {
-			HttpURLConnection cnx = (HttpURLConnection) weather.openConnection();
+			HttpURLConnection cnx = (HttpURLConnection) here.openConnection();
 			cnx.connect();
+			
 			// if the connection is ok, read the content from it
-			if (cnx.getResponseCode() == 200) {
-				BufferedReader io = new BufferedReader(new InputStreamReader(cnx.getInputStream()));
-				
-				String temp = "";
-				while (temp != null) {
-					content += temp + "\n";
-					temp = io.readLine();			
-				}
-				
-				io.close();
-			}
+			if (cnx.getResponseCode() == 200)
+				in = cnx.getInputStream();
 			
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	protected void parseData() throws SAXException, ParserConfigurationException, IOException {
+		SAXParserFactory spf = SAXParserFactory.newInstance();
+	    spf.setNamespaceAware(true);
+	    SAXParser saxParser = spf.newSAXParser();
+	    XMLParser handler = new XMLParser();
+	    
+	    saxParser.parse(in, handler);
+	    
+	    for (Weather w : handler.getList()) {
+	    	w.setMetric(unit);
+	    }
+	    
+	    parsed = handler.getList();
 	}
 	
 	protected void buildURL(String ZIP, String begin, String end, String unit) throws MalformedURLException {
@@ -59,15 +86,15 @@ public class GetWeather {
 		base += "&wdir=wdir"; // wind direction
 		base += "&rh=rh"; // relative humidity
 		
-		weather = new URL(base);
+		here = new URL(base);
 	}
 	
 	public URL getURL() {
-		return weather;
+		return here;
 	}
 	
-	public String getContent() {
-		return content;
+	public InputStream getContent() {
+		return in;
 	}
 	
 	public void setURL(String ZIP, String begin, String end, String unit) throws MalformedURLException {
@@ -79,7 +106,7 @@ public class GetWeather {
 	}
 	
 	public String toString() {
-		return weather + "\n" + content;
+		return here + "\n" + in;
 	}
 	
 	// this is a method to build a timestamp that follows the doc's specifications
