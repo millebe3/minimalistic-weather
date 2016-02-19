@@ -13,3 +13,5 @@ The objective is for this class to take some XML and return a list of weather ob
 
 * when the document begins, instantiate an arrayList
 * when each element beings, take note of what it is and when it is and store it in the appropriate part of the appropriate weather object
+
+*
