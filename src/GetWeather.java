@@ -4,9 +4,7 @@
 
 import java.net.*;
 import javax.xml.parsers.*;
-
 import org.xml.sax.SAXException;
-
 import java.util.ArrayList;
 import java.io.*;
 
