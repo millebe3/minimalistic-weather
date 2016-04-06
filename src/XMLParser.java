@@ -41,7 +41,7 @@ public class XMLParser extends DefaultHandler {
 			what += attr.getValue(0);
 			times = -1;
 			layout = attr.getValue(2);
-		} else if (qName.equals("probability-of-precipitation") || qName.equals("wind-speed" || qName.equals("direction")
+		} else if (qName.equals("probability-of-precipitation") || qName.equals("wind-speed") || qName.equals("direction")
 				|| qName.equals("cloud-amount") || qName.equals("humidity")) {
 			what = qName;
 			times = -1;
