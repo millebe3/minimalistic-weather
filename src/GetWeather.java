@@ -15,11 +15,7 @@ public class GetWeather {
 	protected ArrayList<Weather> parsed;
 	
 	public GetWeather(String ZIP, String begin, String end, String units) {
-		if (units.equals("m"))
-			unit = true;
-		else
-			unit = false;
-		
+		unit = units.equals("m");
 		
 		try {
 			buildURL(ZIP, begin, end, units);
