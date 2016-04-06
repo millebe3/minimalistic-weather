@@ -52,17 +52,34 @@ public class GetWeather {
 	
 	protected void parseData() throws SAXException, ParserConfigurationException, IOException {
 		SAXParserFactory spf = SAXParserFactory.newInstance();
-	    spf.setNamespaceAware(true);
-	    SAXParser saxParser = spf.newSAXParser();
-	    XMLParser handler = new XMLParser();
-	    
-	    saxParser.parse(in, handler);
-	    
-	    for (Weather w : handler.getList()) {
-	    	w.setMetric(unit);
-	    }
-	    
-	    parsed = handler.getList();
+		spf.setNamespaceAware(true);
+		SAXParser saxParser = spf.newSAXParser();
+		XMLParser handler = new XMLParser();
+	    	
+	    	try {
+			saxParser.parse(in, handler);
+			
+			for (Weather w : handler.getList()) {
+			w.setMetric(unit);
+			}
+			
+			parsed = handler.getList();
+		catch (NullPointerException e) {
+			// this could happen if the connection was bad
+			// try to grab the data again
+			grabData();
+			
+			// try to parse the data again. if in is still null, throw an exception
+			if (in != null) {
+				saxParser.parse(in, handler);
+				
+				for (Weather w : handler.getList()) {
+					w.setMetric(unit);
+				}
+				parsed = handler.getList();
+			} else
+				throw new IOException("Can't get input stream");
+		}
 	}
 	
 	protected void buildURL(String ZIP, String begin, String end, String unit) throws MalformedURLException {
