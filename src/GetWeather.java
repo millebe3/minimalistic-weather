@@ -60,11 +60,11 @@ public class GetWeather {
 			saxParser.parse(in, handler);
 			
 			for (Weather w : handler.getList()) {
-			w.setMetric(unit);
+				w.setMetric(unit);
 			}
 			
 			parsed = handler.getList();
-		catch (NullPointerException e) {
+		} catch (NullPointerException e) {
 			// this could happen if the connection was bad
 			// try to grab the data again
 			grabData();
