@@ -41,24 +41,9 @@ public class XMLParser extends DefaultHandler {
 			what += attr.getValue(0);
 			times = -1;
 			layout = attr.getValue(2);
-		} else if (qName.equals("probability-of-precipitation")) {
-			what = "precipitation";
-			times = -1;
-			layout = attr.getValue(2);
-		} else if (qName.equals("wind-speed")) {
-			what = "wind speed";
-			times = -1;
-			layout = attr.getValue(2);
-		} else if (qName.equals("direction")) {
-			what = "wind direction";
-			times = -1;
-			layout = attr.getValue(2);
-		} else if (qName.equals("cloud-amount")) {
-			what = "cloud cover";
-			times = -1;
-			layout = attr.getValue(2);
-		} else if (qName.equals("humidity")) {
-			what = "humidity";
+		} else if (qName.equals("probability-of-precipitation") || qName.equals("wind-speed" || qName.equals("direction")
+				|| qName.equals("cloud-amount") || qName.equals("humidity")) {
+			what = qName;
 			times = -1;
 			layout = attr.getValue(2);
 		} else if (qName.equals("value")) {
@@ -101,18 +86,18 @@ public class XMLParser extends DefaultHandler {
 					if ((times+1) % 4 == 0 || times==0)
 						list.get((times+1)/4).setCurrent(number);
 					
-				} else if (what.equals("precipitation")) {
+				} else if (what.equals("probability-of-precipitation")) {
 					list.get(times).setPrecipitation(number);
 					
-				} else if (what.equals("wind speed")) {
+				} else if (what.equals("wind-speed")) {
 					if ((times+1) % 4 == 0 || times==0)
 						list.get((times+1)/4).setSpeed(number);
 				
-				} else if (what.equals("wind direction")) {
+				} else if (what.equals("direction")) {
 					if ((times+1) % 4 == 0 || times==0)
 						list.get((times+1)/4).setDirection(number);
 					
-				} else if (what.equals("cloud cover")) {
+				} else if (what.equals("cloud-amount")) {
 					if ((times+1) % 4 == 0 || times==0)
 						list.get((times+1)/4).setCloud(number);
 					
