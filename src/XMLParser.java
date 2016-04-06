@@ -15,6 +15,7 @@ public class XMLParser extends DefaultHandler {
 		return list;
 	}
 	
+	@Override
 	public void startDocument() throws SAXException {
 		list = new ArrayList<Weather>();
 		grab = false;
@@ -23,7 +24,8 @@ public class XMLParser extends DefaultHandler {
 			list.add(new Weather());
 		}
 	}
-	
+
+	@Override	
 	public void startElement(String namespaceURI, String localName,
 			String qName, Attributes attr) throws SAXException {
 		if (qName.equals("layout-key")) {
@@ -64,7 +66,8 @@ public class XMLParser extends DefaultHandler {
 			times++;
 		}
 	}
-	
+
+	@Override	
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if (grab) {
 			String temp = "";
