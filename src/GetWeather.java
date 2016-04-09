@@ -118,6 +118,16 @@ public class GetWeather {
 		grabData();
 	}
 	
+	public ArrayList<Weather> getParsed() {
+		return parsed;
+	}
+	
+	public void setParsed() {
+		try {
+		parseData();
+		} catch (Exception e) {} // improve this
+	}
+	
 	public String toString() {
 		return here + "\n" + in;
 	}

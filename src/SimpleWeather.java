@@ -14,7 +14,9 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.net.*;
+import java.util.Calendar;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.io.IOException;
 
 public class SimpleWeather extends JFrame
@@ -32,7 +34,7 @@ public class SimpleWeather extends JFrame
 	private JButton getWeather, usMetric;
 	private JLabel highTemp, lowTemp, humid;
 	private JLabel howMuchRain, date;
-	private JLabel temp, cloud, wind, zip, space;
+	private JLabel temp, cloud, wind, zip;
 
 	public SimpleWeather()
 	{
@@ -66,7 +68,7 @@ public class SimpleWeather extends JFrame
 		placeLabel(panelCenter, gbc, "Chance of Precipitation", 4);
 		placeLabel(panelCenter, gbc, "Cloud Cover", 5);
 		placeLabel(panelCenter, gbc, "Wind Speed", 6);
-		
+
 		// we do need these ones
 		temp = new JLabel("Hot");
 		gbc.gridx = 1;
@@ -195,20 +197,30 @@ public class SimpleWeather extends JFrame
 				try
 				{
 					String zip = validateZIP();
-					// TODO: get dates
+					Calendar tstamp = Calendar.getInstance(); // gets now in the current locale
+					String now = GetWeather.buildTimestamp(tstamp.get(Calendar.YEAR),
+													tstamp.get(Calendar.MONTH)+1, // 0-indexed months
+													tstamp.get(Calendar.DAY_OF_MONTH),
+													tstamp.get(Calendar.HOUR_OF_DAY));
 					
-					// TODO: get units
+					tstamp.add(Calendar.DAY_OF_YEAR, 1);
+					String tm = GetWeather.buildTimestamp(tstamp.get(Calendar.YEAR),
+													tstamp.get(Calendar.MONTH)+1,
+													tstamp.get(Calendar.DAY_OF_MONTH),
+													tstamp.get(Calendar.HOUR_OF_DAY));
+
+					String units = isMetric? "m" : "e";
 					
-					// TODO: put in GetWeather object
-					
-					// TODO: refresh labels
-					
-				} catch (InputMismatchException e)
+					GetWeather w = new GetWeather(zip, now, tm, units);
+					refreshLabels(w);
+				}
+				catch (InputMismatchException e)
 				{
 					// TODO: pop up an error dialog
 				}
 				
-			} else
+			}
+			else
 			{
 				// TODO: pop up an error dialog
 			}
@@ -228,10 +240,12 @@ public class SimpleWeather extends JFrame
 			else
 				return false; // something needs to be done!! by the user, of course
 			
-		} catch (MalformedURLException e)
+		}
+		catch (MalformedURLException e)
 		{
 			return false;
-		} catch (IOException e)
+		}
+		catch (IOException e)
 		{
 			return false;
 		}
@@ -261,9 +275,27 @@ public class SimpleWeather extends JFrame
 		return zip;
 	}
 	
-	// TODO: refreshes the labels to reflect the weather (and the date)
+	// TODO: refreshes the labels to reflect the weather
 	private void refreshLabels(GetWeather w)
 	{
+		// refresh the date
+		Calendar today = Calendar.getInstance();
+		String datetext = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+		datetext += ", " + today.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+		datetext += today.get(Calendar.DAY_OF_MONTH);
+		date.setText(datetext);
+		System.out.println(datetext);
+		
+		Weather weather = w.getParsed().get(0);
+		
+		// refresh the weather labels
+		temp.setText("" + weather.getCurrent());
+		highTemp.setText("" + weather.getHigh());
+		lowTemp.setText("" + weather.getLow());
+		humid.setText("" + weather.getHumidity());
+		howMuchRain.setText("" + weather.getPrecipitation());
+		cloud.setText(weather.cloudiness());
+		wind.setText(weather.windiness());
 		
 	}
 	
