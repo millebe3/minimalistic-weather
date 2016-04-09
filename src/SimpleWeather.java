@@ -11,6 +11,9 @@
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.net.*;
@@ -153,14 +156,20 @@ public class SimpleWeather extends JFrame
 		panelSouth.add(usMetric, gbc);
 
 		GetWeatherListener listener1 = new GetWeatherListener();
-		getWeather.addActionListener(listener1);
+		getWeather.addMouseListener(listener1);
 
-		usMetric.addActionListener(new ActionListener()
+		usMetric.addMouseListener(new MouseListener()
 		{
-			public void actionPerformed(ActionEvent event)
+			public void mouseClicked(MouseEvent event)
 			{
-				isMetric = !isMetric; // toggle between values
+				boolean former = isMetric;
+				isMetric = !former; // toggle between values
 			}
+			
+			public void mouseEntered(MouseEvent event) {}
+			public void mouseExited(MouseEvent event) {}
+			public void mouseReleased(MouseEvent event) {}
+			public void mousePressed(MouseEvent event) {}
 		});
 
 		// create new jframe and put the entire contents panel inside.
@@ -187,9 +196,9 @@ public class SimpleWeather extends JFrame
 	}
 
 	// listener class for the getWeather button
-	private class GetWeatherListener implements ActionListener
+	private class GetWeatherListener implements MouseListener
 	{
-		public void actionPerformed(ActionEvent event)
+		public void mouseClicked(MouseEvent event)
 		{
 			// first, check for network connection
 			if (isNetworkUp())
@@ -216,15 +225,20 @@ public class SimpleWeather extends JFrame
 				}
 				catch (InputMismatchException e)
 				{
-					// TODO: pop up an error dialog
+					errorDialog("Enter a 5 numeric digit US ZIP code");
 				}
 				
 			}
 			else
 			{
-				// TODO: pop up an error dialog
+				errorDialog("Check your network connection");
 			}
 		}
+		
+		public void mouseEntered(MouseEvent event) {}
+		public void mouseExited(MouseEvent event) {}
+		public void mouseReleased(MouseEvent event) {}
+		public void mousePressed(MouseEvent event) {}
 	}
 	
 	private boolean isNetworkUp()
@@ -256,7 +270,7 @@ public class SimpleWeather extends JFrame
 	{
 		// allow 5 or 9 digit ZIP codes, but truncate 9 digit ones
 		String zip = enterZip.getText();
-		if (!(zip.length()==5) || !(zip.length()==9) || !(zip.length()==10))
+		if (!(zip.length()==5) && !(zip.length()==9) && !(zip.length()==10))
 		{
 			// 10 for zip codes like: 21229-3113
 			throw new InputMismatchException("ZIP code wrong length");
@@ -282,18 +296,18 @@ public class SimpleWeather extends JFrame
 		Calendar today = Calendar.getInstance();
 		String datetext = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
 		datetext += ", " + today.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-		datetext += today.get(Calendar.DAY_OF_MONTH);
+		datetext += " " + today.get(Calendar.DAY_OF_MONTH);
 		date.setText(datetext);
-		System.out.println(datetext);
 		
 		Weather weather = w.getParsed().get(0);
+		String unit = isMetric? "C" : "F";
 		
 		// refresh the weather labels
-		temp.setText("" + weather.getCurrent());
-		highTemp.setText("" + weather.getHigh());
-		lowTemp.setText("" + weather.getLow());
-		humid.setText("" + weather.getHumidity());
-		howMuchRain.setText("" + weather.getPrecipitation());
+		temp.setText("" + weather.getCurrent() + unit);
+		highTemp.setText("" + weather.getHigh() + unit);
+		lowTemp.setText("" + weather.getLow() + unit);
+		humid.setText("" + weather.getHumidity() + "%");
+		howMuchRain.setText("" + weather.getPrecipitation() + "%");
 		cloud.setText(weather.cloudiness());
 		wind.setText(weather.windiness());
 		
@@ -302,7 +316,7 @@ public class SimpleWeather extends JFrame
 	// TODO: pops up an error dialog with the specified message
 	private void errorDialog(String msg)
 	{
-		
+		JOptionPane.showMessageDialog(frame, msg, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
 	public static void main(String[] args)
