@@ -1,6 +1,9 @@
-// XMLParser.java	Dorothy Carter
-// this class uses SAX to parse some XML
-
+/**
+ * XMLParser is a custom XML handler for SAX parsing.
+ * 
+ * @author Dorothy Carter
+ * @version 1.0.1
+ */
 import org.xml.sax.*;
 import org.xml.sax.helpers.*;
 import java.util.ArrayList;
@@ -11,10 +14,17 @@ public class XMLParser extends DefaultHandler {
 	String what, layout;
 	int times;
 	
+	/**
+	 * @return the array list of weather objects gotten by parsing
+	 */
 	public ArrayList<Weather> getList() {
 		return list;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 * initializes the array list
+	 */
 	@Override
 	public void startDocument() throws SAXException {
 		list = new ArrayList<Weather>();
@@ -24,7 +34,10 @@ public class XMLParser extends DefaultHandler {
 			list.add(new Weather());
 		}
 	}
-
+	/**
+	 * {@inheritDoc}
+	 * determines what the element is and tells the handler where to put the data
+	 */
 	@Override	
 	public void startElement(String namespaceURI, String localName,
 			String qName, Attributes attr) throws SAXException {
@@ -51,7 +64,11 @@ public class XMLParser extends DefaultHandler {
 			times++;
 		}
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 * parses the actual data into the array list depending on what startElement primed it to do
+	 */
 	@Override	
 	public void characters(char[] ch, int start, int length) throws SAXException {
 		if (grab) {
