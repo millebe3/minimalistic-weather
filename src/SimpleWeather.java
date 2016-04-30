@@ -27,17 +27,30 @@ public class SimpleWeather extends JFrame
 
 	private static final long serialVersionUID = 1L;
 	private boolean isMetric;
-	private JFrame frame;
+	private JFrame frame, frame2;
 	private JPanel contents, panelCenter, panelNorth, panelSouth;
 	private Border borderContents = BorderFactory.createEmptyBorder(10, 10, 10, 10);
 	private Border borderRegion = BorderFactory.createLineBorder(Color.BLACK, 1);
 	private Color colorContents = Color.BLUE;
 	private Font fontLabels = new Font(Font.DIALOG, Font.BOLD, 16);
 	private JTextField enterZip;
-	private JButton getWeather, usMetric;
+	private JButton getWeather, usMetric, sixDay;
 	private JLabel highTemp, lowTemp, humid;
 	private JLabel howMuchRain, date;
 	private JLabel temp, cloud, wind, zip;
+	private  JPanel forecastPanel;
+	private  JLabel day1;
+	private  JLabel day2;
+	private  JLabel day3;
+	private  JLabel day4;
+	private  JLabel day5;
+	private  JLabel day6;
+	private  JLabel day1fore;
+	private  JLabel day2fore;
+	private  JLabel day3fore;
+	private  JLabel day4fore;
+	private  JLabel day5fore;
+	private  JLabel day6fore;
 
 	public SimpleWeather()
 	{
@@ -60,7 +73,7 @@ public class SimpleWeather extends JFrame
 		
 		// create center panel and add labels
 		panelCenter = new JPanel(new GridBagLayout());
-		panelCenter.setPreferredSize(new Dimension(800, 300));
+		panelCenter.setPreferredSize(new Dimension(650, 300));
 		contents.add(panelCenter, BorderLayout.CENTER);
 		
 		// add these using a method, because we don't need to refer to them again
@@ -126,13 +139,16 @@ public class SimpleWeather extends JFrame
 
 		
 		// create bottom panel and add labels
-		panelSouth = new JPanel();
+		panelSouth = new JPanel(new GridBagLayout());
 		panelSouth.setBorder(borderRegion);
 		panelSouth.setPreferredSize(new Dimension(500, 100));
 		contents.add(panelSouth, BorderLayout.SOUTH);
 		
 		
-		placeLabel(panelSouth, gbc, "Enter your ZIP code", 0);
+		zip = new JLabel("Enter your zip code: ");
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		panelSouth.add(zip, gbc);
 
 		enterZip = new JTextField(5);
 		gbc.gridx = 1;
@@ -140,8 +156,8 @@ public class SimpleWeather extends JFrame
 		panelSouth.add(enterZip, gbc);
 
 		getWeather = new JButton("Get Weather Info");
-		gbc.gridx = 2;
-		gbc.gridy = 0;
+		gbc.gridx = 1;
+		gbc.gridy = 1;
 		panelSouth.add(getWeather, gbc);
 
 		gbc.gridx = 3;
@@ -154,9 +170,17 @@ public class SimpleWeather extends JFrame
 		gbc.gridx = 4;
 		gbc.gridy = 0;
 		panelSouth.add(usMetric, gbc);
+		
+		sixDay = new JButton("6 Day Forecast");
+		gbc.gridx = 4;
+		gbc.gridy = 1;
+		panelSouth.add(sixDay, gbc);
 
 		GetWeatherListener listener1 = new GetWeatherListener();
 		getWeather.addMouseListener(listener1);
+		
+		SixDayListener listener3 = new SixDayListener();
+		sixDay.addActionListener(listener3);
 
 		usMetric.addMouseListener(new MouseListener()
 		{
@@ -239,6 +263,98 @@ public class SimpleWeather extends JFrame
 		public void mouseExited(MouseEvent event) {}
 		public void mouseReleased(MouseEvent event) {}
 		public void mousePressed(MouseEvent event) {}
+	}
+	
+	// Listener class for sixDay button; opens separate window to display
+	// Six Day Forecast.
+	private class SixDayListener implements ActionListener
+	{
+		public void actionPerformed (ActionEvent event)
+		{
+			forecastPanel = new JPanel(new GridBagLayout());
+			GridBagConstraints gbc2 = new GridBagConstraints();
+			gbc2.insets = new Insets(25,25,25,25);
+								
+			day1 = new JLabel("Day 1");
+			gbc2.gridx = 0;
+			gbc2.gridy = 0;
+			forecastPanel.add(day1, gbc2);
+								
+			day2 = new JLabel("Day 2");
+			gbc2.gridx = 0;
+			gbc2.gridy = 1;
+			forecastPanel.add(day2, gbc2);
+								
+			day3 = new JLabel("Day 3");
+			gbc2.gridx = 0;
+			gbc2.gridy = 2;
+			forecastPanel.add(day3, gbc2);
+								
+			day4 = new JLabel("Day 4");
+			gbc2.gridx = 0;
+			gbc2.gridy = 3;
+			forecastPanel.add(day4,gbc2);
+								
+			day5 = new JLabel("Day 5");
+			gbc2.gridx = 0;
+			gbc2.gridy = 4;
+			forecastPanel.add(day5, gbc2);
+								
+			day6 = new JLabel("Day 6");
+			gbc2.gridx = 0;
+			gbc2.gridy = 5;
+			forecastPanel.add(day6, gbc2);
+								
+			day1fore = new JLabel("rain");
+			gbc2.gridx = 1;
+			gbc2.gridy = 0;
+			forecastPanel.add(day1fore, gbc2);
+								
+								
+			day2fore = new JLabel("sunny");
+			gbc2.gridx = 1;
+			gbc2.gridy = 1;
+			forecastPanel.add(day2fore, gbc2);
+								
+								
+			day3fore = new JLabel("hot");
+			gbc2.gridx = 1;
+			gbc2.gridy = 2;
+			forecastPanel.add(day3fore, gbc2);
+								
+								
+			day4fore = new JLabel("snow");
+			gbc2.gridx = 1;
+			gbc2.gridy = 3;
+			forecastPanel.add(day4fore, gbc2);
+								
+								
+			day5fore = new JLabel("cloudy");
+			gbc2.gridx = 1;
+			gbc2.gridy = 4;
+			forecastPanel.add(day5fore, gbc2);
+								
+								
+			day6fore = new JLabel("tornado");
+			gbc2.gridx = 1;
+			gbc2.gridy = 5;
+			forecastPanel.add(day6fore, gbc2);
+								
+							
+								
+			forecastPanel.setPreferredSize(new Dimension(300, 500));
+			forecastPanel.setVisible(true);
+			JFrame frame2 = new JFrame ("Six Day Forecast");
+			frame2.add( forecastPanel);
+			frame2.setResizable(false);
+			frame2.pack();
+			frame2.setVisible(true);
+								
+								
+								
+								
+								
+		}
 	}
 	
 	private boolean isNetworkUp()
