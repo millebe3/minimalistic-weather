@@ -24,9 +24,10 @@ import java.io.IOException;
 
 public class SimpleWeather extends JFrame
 {
-
+	// the zip vs. ZIP distinction makes me wary. perhaps refactor --Dorothy
 	private static final long serialVersionUID = 1L;
 	private boolean isMetric;
+	private String zip;
 	private JFrame frame, frame2;
 	private JPanel contents, panelCenter, panelNorth, panelSouth;
 	private Border borderContents = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -37,20 +38,7 @@ public class SimpleWeather extends JFrame
 	private JButton getWeather, usMetric, sixDay;
 	private JLabel highTemp, lowTemp, humid;
 	private JLabel howMuchRain, date;
-	private JLabel temp, cloud, wind, zip;
-	private  JPanel forecastPanel;
-	private  JLabel day1;
-	private  JLabel day2;
-	private  JLabel day3;
-	private  JLabel day4;
-	private  JLabel day5;
-	private  JLabel day6;
-	private  JLabel day1fore;
-	private  JLabel day2fore;
-	private  JLabel day3fore;
-	private  JLabel day4fore;
-	private  JLabel day5fore;
-	private  JLabel day6fore;
+	private JLabel temp, cloud, wind, ZIP;
 
 	public SimpleWeather()
 	{
@@ -145,10 +133,10 @@ public class SimpleWeather extends JFrame
 		contents.add(panelSouth, BorderLayout.SOUTH);
 		
 		
-		zip = new JLabel("Enter your zip code: ");
+		ZIP = new JLabel("Enter your zip code: ");
 		gbc.gridx = 0;
 		gbc.gridy = 0;
-		panelSouth.add(zip, gbc);
+		panelSouth.add(ZIP, gbc);
 
 		enterZip = new JTextField(5);
 		gbc.gridx = 1;
@@ -229,7 +217,7 @@ public class SimpleWeather extends JFrame
 			{
 				try
 				{
-					String zip = validateZIP();
+					zip = validateZIP();
 					Calendar tstamp = Calendar.getInstance(); // gets now in the current locale
 					String now = GetWeather.buildTimestamp(tstamp.get(Calendar.YEAR),
 													tstamp.get(Calendar.MONTH)+1, // 0-indexed months
@@ -263,6 +251,54 @@ public class SimpleWeather extends JFrame
 		public void mouseExited(MouseEvent event) {}
 		public void mouseReleased(MouseEvent event) {}
 		public void mousePressed(MouseEvent event) {}
+		
+		// validates user input, and either returns it or throws an InputMismatchException
+		private String validateZIP()
+		{
+			// allow 5 or 9 digit ZIP codes, but truncate 9 digit ones
+			String zip = enterZip.getText();
+			if (!(zip.length()==5) && !(zip.length()==9) && !(zip.length()==10))
+			{
+				// 10 for zip codes like: 21229-3113
+				throw new InputMismatchException("ZIP code wrong length");
+			} else
+			{
+				try
+				{
+					Integer.parseInt(zip.substring(0, 5));
+					zip = zip.substring(0, 5);
+				} catch (NumberFormatException e)
+				{
+					// if this is triggered, then the first 5 digits of ZIP aren't numeric
+					throw new InputMismatchException("ZIP code not numeric");
+				}
+			}
+			return zip;
+		}
+		
+		// TODO: refreshes the labels to reflect the weather
+		private void refreshLabels(GetWeather w)
+		{
+			// refresh the date
+			Calendar today = Calendar.getInstance();
+			String datetext = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
+			datetext += ", " + today.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
+			datetext += " " + today.get(Calendar.DAY_OF_MONTH);
+			date.setText(datetext);
+			
+			Weather weather = w.getParsed().get(0);
+			String unit = isMetric? "C" : "F";
+			
+			// refresh the weather labels
+			temp.setText("" + weather.getCurrent() + unit);
+			highTemp.setText("" + weather.getHigh() + unit);
+			lowTemp.setText("" + weather.getLow() + unit);
+			humid.setText("" + weather.getHumidity() + "%");
+			howMuchRain.setText("" + weather.getPrecipitation() + "%");
+			cloud.setText(weather.cloudiness());
+			wind.setText(weather.windiness());
+			
+		}
 	}
 	
 	// Listener class for sixDay button; opens separate window to display
@@ -271,88 +307,7 @@ public class SimpleWeather extends JFrame
 	{
 		public void actionPerformed (ActionEvent event)
 		{
-			forecastPanel = new JPanel(new GridBagLayout());
-			GridBagConstraints gbc2 = new GridBagConstraints();
-			gbc2.insets = new Insets(25,25,25,25);
-								
-			day1 = new JLabel("Day 1");
-			gbc2.gridx = 0;
-			gbc2.gridy = 0;
-			forecastPanel.add(day1, gbc2);
-								
-			day2 = new JLabel("Day 2");
-			gbc2.gridx = 0;
-			gbc2.gridy = 1;
-			forecastPanel.add(day2, gbc2);
-								
-			day3 = new JLabel("Day 3");
-			gbc2.gridx = 0;
-			gbc2.gridy = 2;
-			forecastPanel.add(day3, gbc2);
-								
-			day4 = new JLabel("Day 4");
-			gbc2.gridx = 0;
-			gbc2.gridy = 3;
-			forecastPanel.add(day4,gbc2);
-								
-			day5 = new JLabel("Day 5");
-			gbc2.gridx = 0;
-			gbc2.gridy = 4;
-			forecastPanel.add(day5, gbc2);
-								
-			day6 = new JLabel("Day 6");
-			gbc2.gridx = 0;
-			gbc2.gridy = 5;
-			forecastPanel.add(day6, gbc2);
-								
-			day1fore = new JLabel("rain");
-			gbc2.gridx = 1;
-			gbc2.gridy = 0;
-			forecastPanel.add(day1fore, gbc2);
-								
-								
-			day2fore = new JLabel("sunny");
-			gbc2.gridx = 1;
-			gbc2.gridy = 1;
-			forecastPanel.add(day2fore, gbc2);
-								
-								
-			day3fore = new JLabel("hot");
-			gbc2.gridx = 1;
-			gbc2.gridy = 2;
-			forecastPanel.add(day3fore, gbc2);
-								
-								
-			day4fore = new JLabel("snow");
-			gbc2.gridx = 1;
-			gbc2.gridy = 3;
-			forecastPanel.add(day4fore, gbc2);
-								
-								
-			day5fore = new JLabel("cloudy");
-			gbc2.gridx = 1;
-			gbc2.gridy = 4;
-			forecastPanel.add(day5fore, gbc2);
-								
-								
-			day6fore = new JLabel("tornado");
-			gbc2.gridx = 1;
-			gbc2.gridy = 5;
-			forecastPanel.add(day6fore, gbc2);
-								
-							
-								
-			forecastPanel.setPreferredSize(new Dimension(300, 500));
-			forecastPanel.setVisible(true);
-			JFrame frame2 = new JFrame ("Six Day Forecast");
-			frame2.add( forecastPanel);
-			frame2.setResizable(false);
-			frame2.pack();
-			frame2.setVisible(true);
-								
-								
-								
-								
+			new SixDay(zip, isMetric);					
 								
 		}
 	}
@@ -381,53 +336,7 @@ public class SimpleWeather extends JFrame
 		}
 	}
 	
-	// validates user input, and either returns it or throws an InputMismatchException
-	private String validateZIP()
-	{
-		// allow 5 or 9 digit ZIP codes, but truncate 9 digit ones
-		String zip = enterZip.getText();
-		if (!(zip.length()==5) && !(zip.length()==9) && !(zip.length()==10))
-		{
-			// 10 for zip codes like: 21229-3113
-			throw new InputMismatchException("ZIP code wrong length");
-		} else
-		{
-			try
-			{
-				Integer.parseInt(zip.substring(0, 5));
-				zip = zip.substring(0, 5);
-			} catch (NumberFormatException e)
-			{
-				// if this is triggered, then the first 5 digits of ZIP aren't numeric
-				throw new InputMismatchException("ZIP code not numeric");
-			}
-		}
-		return zip;
-	}
-	
-	// TODO: refreshes the labels to reflect the weather
-	private void refreshLabels(GetWeather w)
-	{
-		// refresh the date
-		Calendar today = Calendar.getInstance();
-		String datetext = today.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.getDefault());
-		datetext += ", " + today.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault());
-		datetext += " " + today.get(Calendar.DAY_OF_MONTH);
-		date.setText(datetext);
-		
-		Weather weather = w.getParsed().get(0);
-		String unit = isMetric? "C" : "F";
-		
-		// refresh the weather labels
-		temp.setText("" + weather.getCurrent() + unit);
-		highTemp.setText("" + weather.getHigh() + unit);
-		lowTemp.setText("" + weather.getLow() + unit);
-		humid.setText("" + weather.getHumidity() + "%");
-		howMuchRain.setText("" + weather.getPrecipitation() + "%");
-		cloud.setText(weather.cloudiness());
-		wind.setText(weather.windiness());
-		
-	}
+
 	
 	// TODO: pops up an error dialog with the specified message
 	private void errorDialog(String msg)

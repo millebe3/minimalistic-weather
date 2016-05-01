@@ -9,4 +9,5 @@ If downloading the file, make sure that the JavaSE in .classpath is the version 
 + Refresh the application by default on starting up
 + Listener for 6-day
 + ZIP field is acting up for 1-day, and buttons are off-screen (see screenshots in designs folder)
-+ make it look pretty
++ the 6-day layout is screwed up because I am horrible at GUI. It just needs to be resized, really. Check in the SixDay class
++ Comments. Comments would be good. Not necessary, but good.
